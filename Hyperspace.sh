@@ -19,8 +19,8 @@ function check_and_install_screen() {
 function main_menu() {
     while true; do
         clear
-        echo "脚本由大赌社区哈哈哈哈编写，推特 @ferdie_jhovie，免费开源，请勿相信收费"
-        echo "如有问题，可联系推特，仅此只有一个号"
+        echo "Hyper0.5B模型"
+        echo "模型：bartowski/Qwen2.5-Coder-0.5B-Instruct-Q8_0.gguf"
         echo "================================================================"
         echo "退出脚本，请按键盘 ctrl + C 退出即可"
         echo "请选择要执行的操作:"
@@ -136,7 +136,7 @@ function deploy_hyperspace_node() {
     sleep 5
 
     # 定义模型变量
-    model="hf:TheBloke/phi-2-GGUF:phi-2.Q4_K_M.gguf"
+    model="hf:bartowski/Qwen2.5-Coder-0.5B-Instruct-Q8_0.gguf"
 
     # 添加模型并重试
     echo "正在通过命令 '/root/.aios/aios-cli models add' 添加模型..."
