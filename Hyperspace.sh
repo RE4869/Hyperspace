@@ -136,8 +136,7 @@ function deploy_hyperspace_node() {
     sleep 5
 
     # 定义模型变量
-    model="hf:QuantFactory/Qwen2-0.5B-GGUF/qwen2-0.5b.q8_0.gguf"
-
+    model="hf:QuantFactory/Qwen2-0.5B-GGUF:qwen2-0.5b.q8_0.gguf"
     # 添加模型并重试
     echo "正在通过命令 '/root/.aios/aios-cli models add' 添加模型..."
     while true; do
