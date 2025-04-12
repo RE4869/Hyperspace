@@ -3,10 +3,12 @@
 # 脚本保存路径
 SCRIPT_PATH="$HOME/Hyperspace.sh"
 
+
 # 检查并安装 screen
 function check_and_install_screen() {
     if ! command -v screen &> /dev/null; then
         echo "screen 未安装，正在安装..."
+        # 直接运行安装命令，无需 sudo
         apt update && apt install -y screen
     else
         echo "screen 已安装。"
@@ -17,8 +19,8 @@ function check_and_install_screen() {
 function main_menu() {
     while true; do
         clear
-        echo "Hyper0.5B模型"
-        echo "模型：QuantFactory/Qwen2-0.5B-GGUF/Qwen2-0.5B.Q6_K.gguf"
+        echo "0.5B模型"
+        echo "名称：Qwen2-0.5B-GGUF:Qwen2-0.5B.Q6_K.gguf"
         echo "================================================================"
         echo "退出脚本，请按键盘 ctrl + C 退出即可"
         echo "请选择要执行的操作:"
@@ -133,31 +135,20 @@ function deploy_hyperspace_node() {
     /root/.aios/aios-cli hive import-keys ./my.pem
     sleep 5
 
-    # 定义模型变量（严格匹配文件名）
-    model="hf:QuantFactory/Qwen2-0.5B-GGUF:Qwen2-0.5B.Q6_K.gguf"  # ✅ 已验证存在
+    # 定义模型变量
+    model="hf:QuantFactory/Qwen2-0.5B-GGUF:Qwen2-0.5B.Q6_K.gguf"
 
-    # 添加模型并重试（增加超时和重试逻辑）
+    # 添加模型并重试
     echo "正在通过命令 '/root/.aios/aios-cli models add' 添加模型..."
-    retry_count=0
-    max_retries=5
-    while [ $retry_count -lt $max_retries ]; do
-        if /root/.aios/aios-cli models add "$model" --timeout 1800; then  # 30分钟超时
+    while true; do
+        if /root/.aios/aios-cli models add "$model"; then
             echo "模型添加成功并且下载完成！"
             break
         else
-            echo "添加模型时发生错误，正在重试... ($((retry_count+1))/$max_retries)"
-            retry_count=$((retry_count+1))
-            sleep 30  # 重试间隔延长至30秒
+            echo "添加模型时发生错误，正在重试..."
+            sleep 3
         fi
     done
-
-    if [ $retry_count -eq $max_retries ]; then
-        echo "错误：模型下载失败！请检查："
-        echo "1. 手动运行命令测试: wget -O test.gguf https://huggingface.co/QuantFactory/Qwen2-0.5B-GGUF/resolve/main/Qwen2-0.5B.Q6_K.gguf"
-        echo "2. 服务器磁盘空间: df -h"
-        echo "3. 网络连接: ping huggingface.co"
-        exit 1
-    fi
 
     # 登录并选择等级
     echo "正在登录并选择等级..."
@@ -379,5 +370,4 @@ function exit_script() {
 }
 
 # 调用主菜单函数
-check_and_install_screen
 main_menu
